@@ -26,8 +26,8 @@ class Database
 		$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
-	public function query($sql,$params=null)
-	{    
+	public function query($sql, $params = null)
+	{
 	    try {
 	        if ($this->isSelect($sql)) {
                 $stmt = $this->connection->prepare($sql, [
@@ -38,18 +38,18 @@ class Database
                 } else {
                     $stmt->execute();
                 }
-                
                 $this->stmt = $stmt;
-            }else{
-                $stmt = $this->exec($sql,$params);
-                return ($stmt || $stmt==0);
+
+            } else {
+                $stmt = $this->exec($sql, $params);
+                return ($stmt || $stmt == 0);
             }
 	    } catch (PDOException $e) {
 	        echo "Syntax Error:: ".$e->getMessage();
 	        die();
-	    } 
-	    
-		if($stmt){ 
+	    }
+
+		if ($stmt) {
 			return $stmt;
 		}else{
 			return false;
@@ -57,10 +57,10 @@ class Database
 	}
 
 	public function exec($sql, $params = null)
-	{   
+	{
 	    try {
 	        if ($params) {
-	            $result = $this->connection->exec($sql,$params);
+	            $result = $this->connection->exec($sql, $params);
 	        } else {
 	            $result = $this->connection->exec($sql);
 	        }
@@ -73,11 +73,11 @@ class Database
 
 	public function fetch($resource)
 	{
-		if (!($resource && $resource != null)) {
+		if (! $resource) {
 			return false;
 		}
 		$this->resource = $resource;
-		if (!$this->count($resource)) {
+		if (! $this->count($resource)) {
 			return false;
 		}
 		return $resource->fetch(PDO::FETCH_ASSOC);
@@ -85,7 +85,7 @@ class Database
 
 	public function count($resource)
 	{
-		if (!($resource && $resource!=null)) {
+		if (! $resource) {
 			return false;
 		}
 		return $resource->rowCount();
@@ -123,7 +123,7 @@ class Database
 	
 	public function isSelect($sqlString)
 	{
-	    $sqlString = trim($sqlString," ");
+	    $sqlString = trim($sqlString);
 	    $sqlString = strtoupper($sqlString);
 	    if ($sqlString != '' && (strpos($sqlString, "SELECT") === 0)) {
 	        return true;
