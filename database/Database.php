@@ -77,9 +77,6 @@ class Database
 			return false;
 		}
 		$this->resource = $resource;
-		if (! $this->count($resource)) {
-			return false;
-		}
 		return $resource->fetch(PDO::FETCH_ASSOC);
 	}
 
