@@ -64,28 +64,26 @@ class SCI_Controller
 	 */
 	public function view($file, $data = null)
 	{
-		if (file_exists(APPPATH . 'views/' . $this->owner->controller_name . '/' . $file)) {
-			$html = file_get_contents(APPPATH . 'views/' . $this->owner->controller_name . '/' . $file);
+		if (file_exists(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file)) {
+			$html = file_get_contents(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file);
 		} else {
 			$html = "";
 		}
 		if (!isset($data)) {
 			$data = [];
 		}
-		echo $this->owner->tpl->load($html,$data);
+		echo $this->owner->tpl->load($html, $data);
 	}
 
     /**
-     * @param string $path_inside_public_html
+     * @param string $pathInsideViews
      * @param array $data
      */
     //TODO: change this function with view
-	public function view_public($path_inside_public_html = 'index.html', $data=[])
+	public function view_public($pathInsideViews = 'index.html', $data=[])
 	{
-	    if (file_exists(APPPATH . 'views/' . $path_inside_public_html)) {
-	        require(APPPATH . 'views/' . $path_inside_public_html);
-	    } else {
-	        $html = "";
+	    if (file_exists(APPPATH . 'views/' . $pathInsideViews)) {
+	        require(APPPATH . 'views/' . $pathInsideViews);
 	    }
 	}
 
@@ -96,10 +94,8 @@ class SCI_Controller
     //TODO: delete
 	public function view_php($file, $data = null)
 	{
-		if (file_exists(APPPATH . 'views/' . $this->owner->controller_name . '/' . $file)) {
-			require(APPPATH . 'views/' . $this->owner->controller_name . '/' . $file);
-		} else {
-			$html = "";
+		if (file_exists(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file)) {
+			require(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file);
 		}
 	}
 
@@ -110,20 +106,18 @@ class SCI_Controller
     //TODO: delete
 	public function view_file($file, $data = null)
 	{
-		if (file_exists(APPPATH . 'views/' . $this->owner->controller_name . '/' . $file)) {
-			$html = file_get_contents(APPPATH . 'views/' . $this->owner->controller_name . '/' . $file);
+		if (file_exists(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file)) {
+			$html = file_get_contents(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file);
 		} else {
 			$html = "";
 		}
-		if (!isset($data)) {
-			$data = [];
-		}
+
 		echo $html;
 	}
 
-	public function library($folder, $name_of_file)
+	public function library($folder, $nameOfFile)
 	{
-		require_once(APPPATH . 'libraries/' . $folder . "/" . $name_of_file . ".php");
+		require_once(APPPATH . 'libraries/' . $folder . "/" . $nameOfFile . ".php");
 	}
 	
 	public function manager($manager)
