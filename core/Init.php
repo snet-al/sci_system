@@ -7,8 +7,8 @@ class SCI
 	public $router = null;
 	public $db = null;
 	
-	public $controller_name;
-	public $method_name;
+	public $controllerName;
+	public $methodName;
 	public $paramVector = array();
 	
 	public $controller = null;
@@ -16,42 +16,42 @@ class SCI
 	
 	public function __construct()
 	{
-		$this->load_config();
-		$this->load_uri();
-		$this->load_router();
-		$this->connect_db();
+		$this->loadConfig();
+		$this->loadUri();
+		$this->loadRouter();
+		$this->connectDb();
 		
 		$this->security();
 		
 		//if isset $auth_mode we are in the authorization process , we are in a different envirement or app menaged by security
 		// and we dont enter in mvc
 		if (! isset($GLOBALS['auth_mode']) || ! $GLOBALS['auth_mode'] || $GLOBALS['auth_mode'] != 1) {
-		    $this->load_tpl();
-		    $this->start_mvc();
+		    $this->loadTpl();
+		    $this->startMVC();
 		}
 		
 	}
 	
-	public function load_config()
+	public function loadConfig()
 	{
 		require_once(BASEPATH . 'config/Config.php');
 		$this->config = new SCI_Config($this);
 	}
 
-	public function load_uri()
+	public function loadUri()
 	{
 		require_once(BASEPATH . 'router/URL.php');
 		$this->uri = new SCI_URI($this);
-		$this->uri->fetch_url($_SERVER['REQUEST_URI']);
+		$this->uri->fetchUrl($_SERVER['REQUEST_URI']);
 	}
 
-	public function load_router()
+	public function loadRouter()
 	{
 		require_once(BASEPATH.'router/Router.php');
 		$this->router = new SCI_Router($this);
 	}
 
-	public function load_tpl()
+	public function loadTpl()
 	{
 	    if (file_exists(BASEPATH.'template/STemplate.php')) {
 	        require_once (BASEPATH . 'template/STemplate.php');
@@ -61,7 +61,7 @@ class SCI
 	    }
 	}
 
-	public function connect_db()
+	public function connectDb()
 	{
 		require_once(BASEPATH . 'database/Database.php');
 		$this->db = new Database($this->config->config['database_host'], 
@@ -88,54 +88,38 @@ class SCI
 	    }
 	}
 
-	public function start_mvc()
-	{
-		require_once('Controller.php');
-		require_once('Model.php');
-		
-		$this->router->fetch_controller();
-		$this->router->fetch_method();
-		
-		if (count($this->errors) > 0) {
-			echo json_encode($this->errors);
-		} else {
-			if (file_exists(APPPATH . 'controllers/' . $this->controller_name . '/' . $this->controller_name . '.php')) {
-				require(APPPATH . 'controllers/' . $this->controller_name . '/' . $this->controller_name . '.php');
-			}
-			
-			if (class_exists($this->controller_name)) {
-				$this->controller = new $this->controller_name();
-				$this->controller->owner = $this;
-				$this->controller->db = $this->db;
-				$this->controller->call_method($this->method_name);
-			}else{
-				if (!isset($this->config->config['index_controller']) || !isset($this->config->config['index_method'])) {
-					echo 'bad index controller configuration';
-					return false;
-				}
+	public function startMVC()
+    {
+        require_once('Controller.php');
+        require_once('Model.php');
 
-				$this->controller_name = $this->config->config['index_controller'];
-				$this->method_name=$this->config->config['index_method'];
+        $this->router->fetchController();
+        $this->router->fetchMethod();
 
-				if (!file_exists(APPPATH . 'controllers/' . $this->controller_name . '/' . $this->controller_name . '.php')) {
-					echo 'controller doesnt exist';
-					return false;
-				}
-				require (APPPATH . 'controllers/' . $this->controller_name . '/' . $this->controller_name . '.php');
-				if (class_exists($this->controller_name)) {
-					$this->controller = new $this->controller_name();
-					$this->controller->owner = $this;
-					$this->controller->db = $this->db;
-					
-					$this->controller->call_method($this->method_name);
-				} else {
-					echo 'class with the same name as controller doesnt exist';
-					return false;
-				}
-			}
-		}
-	}
+        if (count($this->errors) > 0) {
+            echo json_encode($this->errors);
+            return false;
+        }
 
+        if (!file_exists(APPPATH . 'controllers/' . $this->controller_name . '/' . $this->controller_name . '.php')) {
+            $this->errors[] = "Controller file not found";
+            echo json_encode($this->errors);
+            return false;
+        }
+
+        require(APPPATH . 'controllers/' . $this->controller_name . '/' . $this->controller_name . '.php');
+
+        if (!class_exists($this->controller_name)) {
+            $this->errors[] = "Controller Class not found";
+            echo json_encode($this->errors);
+            return false;
+        }
+
+        $this->controller = new $this->controllerName();
+        $this->controller->owner = $this;
+        $this->controller->db = $this->db;
+        $this->controller->callMethod($this->methodName);
+    }
 }
 
 /**

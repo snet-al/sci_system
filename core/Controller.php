@@ -6,46 +6,46 @@ class SCI_Controller
 	public $extenders = [];
 	public $db = null;
 	
-	public function addExtender($array_names,$controller)
+	public function addExtender($extenders,$controller)
 	{
-		foreach ($array_names as $name_of_file) {
-			require_once(APPPATH . 'controllers/' . $controller . "/" . $name_of_file . ".php");
-			if (class_exists($name_of_file)) {
-				$this->extenders[] = new $name_of_file;
+		foreach ($extenders as $nameOfFile) {
+			require_once(APPPATH . 'controllers/' . $controller . "/" . $nameOfFile . ".php");
+			if (class_exists($nameOfFile)) {
+				$this->extenders[] = new $nameOfFile;
 			}
 		}
 	}
-	public function call_method($method_name)
+	public function callMethod($methodName)
 	{
-		if ($method_name !== '') {
-			if (method_exists($this, $method_name)) {
-				$method = &$this->$method_name;
-				call_user_func_array(array($this, $method_name), $this->owner->paramVector);
-			} else {
-				$found = false;
-				$i_of_obj = -1;
-				if (count($this->extenders) > 0) {
-					foreach ($this->extenders as $i => $extender) {
-						if (method_exists($extender, $method_name)) {
-							$i_of_obj = $i;
-							$found = true;
-							break;
-					 	}
-				 	}
-				}
-				
-				if (!$found) {
-					$this->error_method($method_name);
-				} else {
-					call_user_func_array(array($this->extenders[$i_of_obj], $method_name), $this->owner->paramVector);
-				}
-			}
-		} else {
-			$this->index($this->owner->paramVector);
-		}
+
+		if ($methodName !== '') {
+            return $this->index($this->owner->paramVector);
+        }
+        if (method_exists($this, $methodName)) {
+            call_user_func_array(array($this, $methodName), $this->owner->paramVector);
+        } else {
+            $found = false;
+            $indexOfExtender = -1;
+            if (count($this->extenders) > 0) {
+                foreach ($this->extenders as $i => $extender) {
+                    if (method_exists($extender, $methodName)) {
+                        $indexOfExtender = $i;
+                        $found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!$found) {
+                $this->errorMethod($methodName);
+            } else {
+                call_user_func_array(array($this->extenders[$indexOfExtender], $methodName), $this->owner->paramVector);
+            }
+        }
+
 	}
 	
-	public function error_method($method_name)
+	public function errorMethod($method_name)
 	{
 		echo '<br>error in method name';
 	}
@@ -74,7 +74,12 @@ class SCI_Controller
 		}
 		echo $this->owner->tpl->load($html,$data);
 	}
-	
+
+    /**
+     * @param string $path_inside_public_html
+     * @param array $data
+     */
+    //TODO: change this function with view
 	public function view_public($path_inside_public_html = 'index.html', $data=[])
 	{
 	    if (file_exists(APPPATH . 'views/' . $path_inside_public_html)) {
@@ -84,6 +89,11 @@ class SCI_Controller
 	    }
 	}
 
+    /** DEPRECATED
+     * @param $file
+     * @param null $data
+     */
+    //TODO: delete
 	public function view_php($file, $data = null)
 	{
 		if (file_exists(APPPATH . 'views/' . $this->owner->controller_name . '/' . $file)) {
@@ -93,6 +103,11 @@ class SCI_Controller
 		}
 	}
 
+    /** DEPRECATED
+     * @param $file
+     * @param null $data
+     */
+    //TODO: delete
 	public function view_file($file, $data = null)
 	{
 		if (file_exists(APPPATH . 'views/' . $this->owner->controller_name . '/' . $file)) {

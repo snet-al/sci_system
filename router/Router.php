@@ -10,33 +10,33 @@ class SCI_Router
 		$this->uri = $this->owner->uri;	
 	}
 	
-    public function fetch_controller()
+    public function fetchController()
     {
 		if (isset($this->uri->url[1])) {
-			$this->owner->controller_name = $this->uri->url[1];
-		}else{
-			$this->owner->errors[] = 'no controller found';
-			$this->owner->controller_name = $this->uri->url_request;
+			$this->owner->controllerName = $this->uri->url[1];
+			return true;
 		}
+
+        if (! isset($this->owner->config->config['index_controller'])) {
+            $this->owner->errors[] = 'no controller found';
+            return false;
+        }
+
+        $this->owner->controllerName = $this->config->config['index_controller'];
     }
     
-    public function fetch_method()
+    public function fetchMethod()
     {
 		if (isset($this->uri->url[2])) {
-			$this->owner->method_name = $this->uri->url[2];
-		} else {
-			$this->owner->errors[] = 'no method found';
-			$this->owner->method_name = 'error_method';
+			$this->owner->methodName = $this->uri->url[2];
+			return true;
 		}
+		if (!isset($this->owner->config->config['index_method'])) {
+            $this->owner->errors[] = 'no method found';
+            $this->owner->methodName = 'error_method';
+            return false;
+        }
+        $this->owner->methodName = $this->owner->config->config['index_method'];
     }
-    
-    public function fetch_params()
-    {
-		if (count($this->uri->url) == 4) {
-			//define params of {p=1&t=4&gsd=nmsdf}
-		} else {
-			$this->owner->errors[]="Fetch params not posible url not formated";
-		}
-	}
 }
 ?>
