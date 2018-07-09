@@ -101,15 +101,15 @@ class SCI
             return false;
         }
 
-        if (!file_exists(APPPATH . 'controllers/' . $this->controller_name . '/' . $this->controller_name . '.php')) {
+        if (!file_exists(APPPATH . 'controllers/' . $this->controllerName . '/' . $this->controllerName . '.php')) {
             $this->errors[] = "Controller file not found";
             echo json_encode($this->errors);
             return false;
         }
 
-        require(APPPATH . 'controllers/' . $this->controller_name . '/' . $this->controller_name . '.php');
+        require(APPPATH . 'controllers/' . $this->controllerName . '/' . $this->controllerName . '.php');
 
-        if (!class_exists($this->controller_name)) {
+        if (!class_exists($this->controllerName)) {
             $this->errors[] = "Controller Class not found";
             echo json_encode($this->errors);
             return false;
