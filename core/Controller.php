@@ -6,7 +6,7 @@ class SCI_Controller
 	public $extenders = [];
 	public $db = null;
 	
-	public function addExtender($extenders,$controller)
+	public function addExtender($extenders, $controller)
 	{
 		foreach ($extenders as $nameOfFile) {
 			require_once(APPPATH . 'controllers/' . $controller . "/" . $nameOfFile . ".php");
@@ -45,14 +45,14 @@ class SCI_Controller
 
 	}
 	
-	public function errorMethod($method_name)
+	public function errorMethod($methodName = '')
 	{
-		echo '<br>error in method name';
+		echo '<br>error in method name : ' . $methodName;
 	}
 
 	public function index()
 	{
-		echo '<br>this is index method which cun be overriden';
+		echo '<br>this is index method which should be overridden';
 	}
 
 	/**
