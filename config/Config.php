@@ -7,10 +7,10 @@ class SCI_Config
 	public function __construct($owner)
 	{
 		$this->owner = $owner;
-		$this->get_config();
+		$this->getConfig();
 	}
 	
-	public function get_config()
+	public function getConfig()
 	{
 		global $database;
 		$this->config['index_controller'] = 'home';

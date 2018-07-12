@@ -11,7 +11,7 @@ class SCI_URI
 		$this->owner = $owner;
 	}
 	
-    public function fetch_url($request)
+    public function fetchUrl($request)
     {   
 		if (isset($request) && $request !== "") {
 			$v = explode("?", $request);
