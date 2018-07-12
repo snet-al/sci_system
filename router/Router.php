@@ -12,7 +12,7 @@ class SCI_Router
 	
     public function fetchController()
     {
-		if (isset($this->uri->url[1])) {
+		if (isset($this->uri->url[1]) && $this->uri->url[1] != '') {
 			$this->owner->controllerName = $this->uri->url[1];
 			return true;
 		}
@@ -22,17 +22,17 @@ class SCI_Router
             return false;
         }
 
-        $this->owner->controllerName = $this->config->config['index_controller'];
+        $this->owner->controllerName = $this->owner->config->config['index_controller'];
     }
     
     public function fetchMethod()
     {
-		if (isset($this->uri->url[2])) {
+		if (isset($this->uri->url[2]) && $this->uri->url[2] != '') {
 			$this->owner->methodName = $this->uri->url[2];
 			return true;
 		}
 		if (!isset($this->owner->config->config['index_method'])) {
-            $this->owner->errors[] = 'no method found';
+            $this->owner->errors[] = 'no index_method config found';
             $this->owner->methodName = 'error_method';
             return false;
         }
