@@ -64,55 +64,9 @@ class SCI_Controller
 	 */
 	public function view($file, $data = null)
 	{
-		if (file_exists(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file)) {
-			$html = file_get_contents(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file);
-		} else {
-			$html = "";
-		}
-		if (!isset($data)) {
-			$data = [];
-		}
-		echo $this->owner->tpl->load($html, $data);
-	}
-
-    /**
-     * @param string $pathInsideViews
-     * @param array $data
-     */
-    //TODO: change this function with view
-	public function view_public($pathInsideViews = 'index.html', $data=[])
-	{
-	    if (file_exists(APPPATH . 'views/' . $pathInsideViews)) {
-	        require(APPPATH . 'views/' . $pathInsideViews);
-	    }
-	}
-
-    /** DEPRECATED
-     * @param $file
-     * @param null $data
-     */
-    //TODO: delete
-	public function view_php($file, $data = null)
-	{
-		if (file_exists(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file)) {
-			require(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file);
-		}
-	}
-
-    /** DEPRECATED
-     * @param $file
-     * @param null $data
-     */
-    //TODO: delete
-	public function view_file($file, $data = null)
-	{
-		if (file_exists(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file)) {
-			$html = file_get_contents(APPPATH . 'views/' . $this->owner->controllerName . '/' . $file);
-		} else {
-			$html = "";
-		}
-
-		echo $html;
+        if (file_exists(APPPATH . $file)) {
+            require(APPPATH . 'views/' . $file);
+        }
 	}
 
 	public function library($folder, $nameOfFile)
