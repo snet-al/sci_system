@@ -18,7 +18,7 @@ class SCI_Controller
 	public function callMethod($methodName)
 	{
 
-		if ($methodName !== '') {
+		if ($methodName == '') {
             return $this->index($this->owner->paramVector);
         }
         if (method_exists($this, $methodName)) {
