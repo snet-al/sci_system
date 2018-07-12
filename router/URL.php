@@ -45,11 +45,11 @@ class SCI_URI
 					for ($i = 0; $i < count($trv); $i++) {
 						$this->url[$i] = $trv[$i];
 						if ($i > 2) {
-							$this->owner->paramVector[]=$trv[$i];
+							$this->owner->paramVector[] = $trv[$i];
 						}
 					}
 				} else {
-					$this->owner->errors[]="url not formated";
+					$this->owner->errors[] = "url not formated";
 				}
 			} else {
 				$this->owner->errors[] = "url not formated";
