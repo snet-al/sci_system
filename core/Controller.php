@@ -64,8 +64,8 @@ class SCI_Controller
 	 */
 	public function view($file, $data = null)
 	{
-        if (file_exists(APPPATH . $file)) {
-            require(APPPATH . 'views/' . $file);
+        if (file_exists(PATH . $file)) {
+            require(PATH . $file);
         }
 	}
 
