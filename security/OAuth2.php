@@ -20,6 +20,7 @@ Class OAuth2
             return false;
         } else {
             if (!isset($_SESSION['is_loged']) || $_SESSION['is_loged'] != 1) {
+                http_response_code(307);
                 header('location:oauth2.php?redirect_url='.$_SERVER['REQUEST_URI']);
                 exit();
             } else {
