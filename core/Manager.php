@@ -28,16 +28,10 @@ class SCI_Manager
 	{
 	    switch ($process){
 	        case 'start':
-	            echo 'start';
-	            //start DB transactions
 	            break;
 	        case 'commit':
-	            echo 'commit';
-	            //commit DB transaction
 	            break;
 	        case 'rollback':
-	            echo 'rollback';
-	            //rollback DB transaction
 	            break;
 	        default:
 	            return false;

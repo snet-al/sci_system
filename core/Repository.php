@@ -1,4 +1,4 @@
 <?php 
-class Repository{
+class SCI_Repository{
     
 }

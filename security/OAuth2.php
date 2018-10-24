@@ -12,7 +12,7 @@ Class OAuth2
     
     public function check()
     {
-        //session_name('session_token');
+        //TODO: change session_name('session_token');
         session_start();
         
         if (isset($GLOBALS['auth_mode']) && $GLOBALS['auth_mode'] == 1) {
