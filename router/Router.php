@@ -36,6 +36,7 @@ class SCI_Router
             $this->owner->methodName = 'error_method';
             return false;
         }
+
         $this->owner->methodName = $this->owner->config->config['index_method'];
     }
 }

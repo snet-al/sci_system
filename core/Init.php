@@ -26,7 +26,6 @@ class SCI
 		//if isset $auth_mode we are in the authorization process , we are in a different envirement or app menaged by security
 		// and we dont enter in mvc
 		if (! isset($GLOBALS['auth_mode']) || ! $GLOBALS['auth_mode'] || $GLOBALS['auth_mode'] != 1) {
-		    $this->loadTpl();
 		    $this->startMVC();
 		}
 		
@@ -51,16 +50,6 @@ class SCI
 		$this->router = new SCI_Router($this);
 	}
 
-	public function loadTpl()
-	{
-	    if (file_exists(BASEPATH.'template/STemplate.php')) {
-	        require_once (BASEPATH . 'template/STemplate.php');
-	        $this->tpl = new SCI_Template($this, BASEPATH . 'template/Mustache');
-	    } else {
-	        $this->tpl = null;
-	    }
-	}
-
 	public function connectDb()
 	{
 		require_once(BASEPATH . 'database/Database.php');
@@ -78,20 +67,16 @@ class SCI
 	{
 	    $this->uri->rebuildRequest();
 	    
-	    if (isset($this->config) && isset($this->config->config['security']) && $this->config->config['security'] == 'oauth2') {
+	    if (isset($this->config->config['security']) && $this->config->config['security'] === 'oauth2') {
 	        require_once(BASEPATH.'security/OAuth2.php');
 	        $this->security = new Oauth2($this, $this->config->config['security']);
 	        $this->security->check();
-	    } else {
-	        //default flow for ecommerce
-	        //TODO: add the auth check of ecommerce with Oauth2 and the posibility to login with google and facebook
 	    }
 	}
 
 	public function startMVC()
     {
         require_once('Controller.php');
-        require_once('Model.php');
 
         $this->router->fetchController();
         $this->router->fetchMethod();
@@ -120,16 +105,4 @@ class SCI
         $this->controller->db = $this->db;
         $this->controller->callMethod($this->methodName);
     }
-}
-
-/**
- * HELPER FUNCTIONS
- * 
- */
-function dd ($data = null) 
-{
-    echo "\n";
-    print_r($data);
-    echo "\n";
-    die();
 }
