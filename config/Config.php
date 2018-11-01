@@ -2,8 +2,8 @@
 class SCI_Config
 {
 	public $config = [];
-	public $_config_paths = [];
-	
+	public $owner;
+
 	public function __construct($owner)
 	{
 		$this->owner = $owner;
@@ -12,11 +12,11 @@ class SCI_Config
 	
 	public function getConfig()
 	{
-		global $database;
 		$this->config['index_controller'] = 'home';
 		$this->config['index_method'] = 'index';
 		
-		if (isset($database) && gettype($database) == 'array') {
+		if (isset($GLOBALS['database']) && gettype($GLOBALS['database']) == 'array') {
+			$database = $GLOBALS['database'];
 			$this->config['database_host'] = $database['host'];
 			$this->config['database_user'] = $database['user'];
 			$this->config['database_password'] = $database['password'];

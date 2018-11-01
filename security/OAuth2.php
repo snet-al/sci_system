@@ -12,55 +12,19 @@ Class OAuth2
     
     public function check()
     {
-        //TODO: change session_name('session_token');
         session_start();
-        
         if (isset($GLOBALS['auth_mode']) && $GLOBALS['auth_mode'] == 1) {
             $this->auth();
             return false;
-        } else {
-            if (!isset($_SESSION['is_loged']) || $_SESSION['is_loged'] != 1) {
-                http_response_code(300);
-                header('location:oauth2.php?redirect_url='.$_SERVER['REQUEST_URI']);
-                exit();
-            } else {
-                return true;
-            }
         }
-        
-        if (isset($_SESSION['is_loged']) && $_SESSION['is_loged']==1){
-            $GLOBALS['is_loged']=true;
-            $GLOBALS['is_partial_loged']=false;
-            $GLOBALS['global_user']=$_SESSION['user_id'];
-            $GLOBALS['global_user_id']=$_SESSION['user_id'];
-            $GLOBALS['global_user_name']=$_SESSION['user_name'];
-            if(isset($_SESSION['user_curr'])){
-                $GLOBALS['global_user_curr']=$_SESSION['user_curr'];
-            }else{
-                $GLOBALS['global_user_curr']=$curr_default;
-            }
-            if(isset($_SESSION['user_lang'])){
-                $GLOBALS['global_user_lang']=$_SESSION['user_lang'];
-            }else{
-                $GLOBALS['global_user_lang']=$lang;
-            }
-        }else{
-            $GLOBALS['is_loged']=false;
-            $GLOBALS['is_partial_loged']=true;
-            $GLOBALS['global_user']=session_id();
-            $GLOBALS['global_user_id']=session_id();
-            if(isset($_SESSION['user_curr'])){
-                $GLOBALS['global_user_curr']=$_SESSION['user_curr'];
-            }else{
-                $GLOBALS['global_user_curr']=$curr_default;
-            }
-            if(isset($_SESSION['user_lang'])){
-                $GLOBALS['global_user_lang']=$_SESSION['user_lang'];
-            }else{
-                $GLOBALS['global_user_lang']=$lang;
-            }
+
+        if (!isset($_SESSION['is_loged']) || $_SESSION['is_loged'] != 1) {
+            http_response_code(300);
+            header('location:oauth2.php?redirect_url='.$_SERVER['REQUEST_URI']);
+            exit();
         }
-        
+
+        return true;
     }
     
     public function auth()

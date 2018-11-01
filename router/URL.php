@@ -3,8 +3,12 @@ require_once BASEPATH.'security/Escape.php';
 class SCI_URI
 {
 	public $owner;
-	public $url_request = '';
-	public $url = [];
+	public $urlRequest = '';
+	public $url = [
+	    0 => '',
+        1 => '',
+        2 => '',
+    ];
 	
     public function __construct($owner)
     {
@@ -12,49 +16,48 @@ class SCI_URI
 	}
 	
     public function fetchUrl($request)
-    {   
-		if (isset($request) && $request !== "") {
-			$v = explode("?", $request);
-			
-			if (isset($v) && count($v) == 0) {
-				$this->url_request = '';
-				$this->url[0] = "";
-				$this->url[1] = "";
-				$this->url[2] = "";
-				
-			} else if(isset($v) && count($v) == 1 ) {
-				$this->url_request = '';
-				$this->url[0] = "";
-				$this->url[1] = "";
-				$this->url[2] = "";
-				
-			} else if(isset($v) && count($v) == 2) {
-				$tr = $this->url_request = $v[1];
-				$trv = explode("/", $tr);
-				if (isset($trv) && count($trv) == 0) {
-					$this->owner->errors[]="no controller";
-				} else if (isset($trv) && count($trv) == 1) {
-					$this->url[0] = $trv[0];
-					$this->url[1] = "";
-					$this->url[2] = "";
-				} else if (isset($trv) && count($trv) == 2) {
-					$this->url[0]  =$trv[0];
-					$this->url[1] = $trv[1];
-					$this->url[2] = "";
-				} elseif (isset($trv) && count($trv) > 2){
-					for ($i = 0; $i < count($trv); $i++) {
-						$this->url[$i] = $trv[$i];
-						if ($i > 2) {
-							$this->owner->paramVector[] = $trv[$i];
-						}
-					}
-				} else {
-					$this->owner->errors[] = "url not formated";
-				}
-			} else {
-				$this->owner->errors[] = "url not formated";
-			}
-		}
+    {
+        if (!isset($request) || $request === "") {
+            return false;
+        }
+
+        $urlParamsPart = explode("?", $request);
+
+        if (!isset($urlParamsPart) || (isset($urlParamsPart) && (count($urlParamsPart) === 0 || count($urlParamsPart) == 1))) {
+            return false;
+        }
+
+        if (count($urlParamsPart) !== 2) {
+            $this->owner->errors[] = "url not formated";
+            return false;
+        }
+
+        $this->urlRequest = $urlParamsPart[1];
+        $route = explode("/", $this->urlRequest);
+
+        if (!isset($route) || (isset($route) && ($routeLength = count($route)) === 0)) {
+            $this->owner->errors[] = "no controller";
+            return false;
+        }
+        if ($routeLength === 1) {
+            $this->url[0] = $route[0];
+            $this->url[1] = "";
+            $this->url[2] = "";
+        } else if ($routeLength === 2) {
+            $this->url[0] = $route[0];
+            $this->url[1] = $route[1];
+            $this->url[2] = "";
+        } elseif ($routeLength > 2){
+            for ($i = 0; $i < $routeLength; $i++) {
+                $this->url[$i] = $route[$i];
+                if ($i > 2) {
+                    $this->owner->paramVector[] = $route[$i];
+                }
+            }
+        } else {
+            $this->owner->errors[] = "url not formated";
+        }
+
 	}
 	
     public function rebuildRequest()
