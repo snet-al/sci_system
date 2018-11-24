@@ -19,8 +19,10 @@ Class OAuth2
         }
 
         if (!isset($_SESSION['is_loged']) || $_SESSION['is_loged'] != 1) {
-            http_response_code(300);
-            header('location:oauth2.php?redirect_url='.$_SERVER['REQUEST_URI']);
+            http_response_code(301);
+            if (!(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) {
+                header('location:oauth2.php?redirect_url='.$_SERVER['REQUEST_URI']);
+            }
             exit();
         }
 
