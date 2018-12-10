@@ -3,8 +3,16 @@ require_once 'Manager.php';
 class SCI_Controller
 {
     public $owner = null;
-    public $extenders = [];
     public $db = null;
+
+    public function __construct()
+    {
+        foreach ($this as $k => $v) {
+            if($k !== 'response' && $k !== 'request') {
+                unset($this->{$k});
+            }
+        }
+    }
 
     public function addExtender($extenders, $controller)
     {
@@ -22,26 +30,30 @@ class SCI_Controller
             return $this->index($this->owner->paramVector);
         }
         if (method_exists($this, $methodName)) {
-            return call_user_func_array([$this, $methodName], $this->owner->paramVector);
+            call_user_func_array([$this, $methodName], $this->owner->paramVector);
+        } else {
+            $this->errorMethod($methodName);
         }
 
-        $found = false;
-        $indexOfExtender = -1;
-        if (count($this->extenders) > 0) {
-            foreach ($this->extenders as $i => $extender) {
-                if (method_exists($extender, $methodName)) {
-                    $indexOfExtender = $i;
-                    $found = true;
-                    break;
-                }
-            }
-        }
+    }
 
-        if (!$found) {
-            return $this->errorMethod($methodName);
+    /**
+     * DEPRECATED function
+     *
+     * @param [type] $file
+     * @param [type] $data
+     * @return void
+     */
+    public function view($file, $data = null)
+    {
+        if (file_exists(PATH . $file)) {
+            require(PATH . $file);
         }
+    }
 
-        return call_user_func_array([$this->extenders[$indexOfExtender], $methodName], $this->owner->paramVector);
+    public function library($folder, $nameOfFile)
+    {
+        require_once(APPPATH . 'libraries/' . $folder . "/" . $nameOfFile . ".php");
     }
 
     public function manager($mgr)
@@ -54,6 +66,7 @@ class SCI_Controller
         $manager->mgr = $mgr;
         $manager->db = $this->db;
         $manager->owner = $this->owner;
+        $manager->contoller = $this;
 
         foreach ($methodsOfManager as $methodName) {
             $manager->{$methodName} = function() use ($methodName){
@@ -71,6 +84,16 @@ class SCI_Controller
     }
 
 
+    public function model($modelObject)
+    {
+        $modelObject->controller = $this;
+        $modelObject->db = $this->db;
+        $modelObject->owner = $this->owner;
+
+        return $modelObject;
+    }
+
+
     public function __get($name)
     {
         if (isset($this->{$name})) {
@@ -80,11 +103,13 @@ class SCI_Controller
         $rc = new \ReflectionClass(get_class($this));
         $constructorParameters = $rc->getConstructor()->getParameters();
         foreach ($constructorParameters as $constructorParameter) {
-            $className = $constructorParameter->getClass()->getName();
+            $className = ($constructorParameter->getClass()->getName());
             if ($name === $constructorParameter->name) {
                 $newObject = new $className;
                 if ($newObject instanceof SCI_Manager) {
                     $this->{$name} = $this->manager($newObject);
+                } else if ($newObject instanceof SCI_Model) {
+                    $this->{$name} = $this->model($newObject);
                 } else {
                     $this->{$name} = $newObject;
                 }
