@@ -112,7 +112,7 @@ class Database
 	
 	public function table($table)
 	{
-		require_once('./Table.php');
+		require_once(BASEPATH.'database/Table.php');
 		$t = new Table($table);
 		$t->db = $this;
 		return $t;
