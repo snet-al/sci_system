@@ -27,7 +27,6 @@ class SCI
         //if isset $auth_mode we are in the authorization process , we are in a different envirement or app menaged by security
         // and we dont enter in mvc
         if (! isset($GLOBALS['auth_mode']) || ! $GLOBALS['auth_mode'] || $GLOBALS['auth_mode'] != 1) {
-            $this->loadTpl();
             $this->startMVC();
         }
 
@@ -50,16 +49,6 @@ class SCI
     {
         require_once(BASEPATH.'router/Router.php');
         $this->router = new SCI_Router($this);
-    }
-
-    public function loadTpl()
-    {
-        if (file_exists(BASEPATH.'template/STemplate.php')) {
-            require_once (BASEPATH . 'template/STemplate.php');
-            $this->tpl = new SCI_Template($this, BASEPATH . 'template/Mustache');
-        } else {
-            $this->tpl = null;
-        }
     }
 
     public function connectDb()
