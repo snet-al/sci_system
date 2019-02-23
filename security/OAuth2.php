@@ -38,16 +38,16 @@ Class OAuth2
 
             if (isset($_POST['client_username']) && $_POST['client_username'] !== '') {
                 $client_username = trim($_POST['client_username']);
-                $result = $this->owner->db->table('oauth_users')->select("*", ['client_username' => $client_username]);
+                $result = $this->owner->db->table('oauth_users')->where('client_username', $client_username)->get();
                 if ($result && count($result) == 1){
                     if(isset($_POST['grant_type']) && $_POST['grant_type'] == 'authorization_code'){
                         $auth_code = bin2hex(random_bytes(32));
-                        $update_auth_code = $this->owner->db->table('oauth_users')->edit(['auth_code' => $auth_code], ['client_id' => $result[0]["client_id"]]);
+                        $update_auth_code = $this->owner->db->table('oauth_users')->where('client_id', $result->first()->client_id)->update(['auth_code' => $auth_code]);
                         if (!$update_auth_code) {
                             echo '{error:"server_error",message:"update auth code"}';
                             exit();
                         }
-                        echo '{"client_id":"'.$result[0]["client_id"].'", "authorization_code":"'.$auth_code.'" }';
+                        echo '{"client_id":"'.$result->first()->client_id.'", "authorization_code":"'.$auth_code.'" }';
                         exit();
                     }
                     
@@ -59,12 +59,12 @@ Class OAuth2
         } else if (isset($_GET['request']) && $_GET['request'] == 'token') {
             if (isset($_POST['client_id']) && $_POST['client_id'] !== '') {
                 $client_id = trim($_POST['client_id']);
-                $result = $this->owner->db->table('oauth_users')->select("*", ['client_id' => $client_id]);
+                $result = $this->owner->db->table('oauth_users')->where('client_id', $client_id)->get();
                 if ($result && count($result) == 1) {
                     if (isset($_POST['code']) && $_POST['code'] !== '') {
-                        if ($result[0]['auth_code'] === $_POST['code'] && $result[0]['password'] === $this->chipher($_POST['password'])) {
+                        if ($result->first()->auth_code === $_POST['code'] && $result[0]->password === $this->chipher($_POST['password'])) {
                             $access_token = bin2hex(random_bytes(32));
-                            $update_auth_code = $this->owner->db->table('oauth_users')->edit(['access_token' => $access_token], ['client_id' => $result[0]["client_id"]]);
+                            $update_auth_code = $this->owner->db->table('oauth_users')->where('client_id', $result[0]->client_id)->update(['access_token' => $access_token]);
                             if (! $update_auth_code) {
                                 echo '{"error":"server_error","message":"update auth code"}';
                                 exit();
@@ -73,12 +73,12 @@ Class OAuth2
                             echo '{"error":"unauthorized_client"}';
                             exit();
                         }
-                        echo '{"success":1,"client_id":"'.$result[0]["client_id"].'", "access_token":"'.$access_token.'" }';
+                        echo '{"success":1,"client_id":"'.$result[0]->client_id.'", "access_token":"'.$access_token.'" }';
                     } else {
                         if ($result[0]['password'] === $this->chipher($_POST['password'])) {
                             //this is succesfully login
                             $access_token = bin2hex(random_bytes(32));
-                            $update_auth_code = $this->owner->db->table('oauth_users')->edit(['access_token'=>$access_token], ['client_id'=>$result[0]["client_id"]]);
+                            $update_auth_code = $this->owner->db->table('oauth_users')->where('client_id', $result[0]->client_id)->update(['access_token'=>$access_token]);
                             if (! $update_auth_code) {
                                 echo '{"error":"server_error","message":"update auth code"}';
                                 exit();
@@ -87,7 +87,7 @@ Class OAuth2
                             echo '{"error":"unauthorized_client"}';
                             exit();
                         }
-                        echo '{"success":1,"client_id":"'.$result[0]["client_id"].'", "access_token":"'.$access_token.'" }';
+                        echo '{"success":1,"client_id":"'.$result[0]->client_id.'", "access_token":"'.$access_token.'" }';
                     }
                 }else{
                     echo '{"error":"unauthorized_client"}';
