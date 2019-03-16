@@ -59,7 +59,8 @@ class SCI_URI
 
     public function rebuildRequest()
     {
-        $request = [];
+        $request = new ArrayObject();
+        $request->setFlags(ArrayObject::STD_PROP_LIST|ArrayObject::ARRAY_AS_PROPS);
         foreach ($_GET as $key => $value) {
             $request[$key] = $_GET[$key] = SCI_Escape::escape($value, $this->owner);
         }
