@@ -8,7 +8,7 @@ class SCI_Controller
     public function __construct()
     {
         foreach ($this as $k => $v) {
-            if($k !== 'response' && $k !== 'request') {
+            if($k !== 'response' && $k !== 'request' && $k !== 'db' && $k !== 'owner') {
                 unset($this->{$k});
             }
         }
