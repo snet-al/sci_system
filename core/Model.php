@@ -1,10 +1,13 @@
 <?php
 class SCI_Model
 {
+    public $controller;
+    public $owner;
+    
     public function __construct()
     {
         foreach ($this as $k => $v) {
-            if ($k !== 'request' && $k !== 'controller'){
+            if ($k !== 'owner' && $k!== 'request' && $k !== 'controller'){
                 unset($this->{$k});
             }
         }
@@ -64,5 +67,6 @@ class SCI_Model
             }
 
         }
+        return true;
     }
 }

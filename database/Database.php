@@ -26,11 +26,17 @@ class Database
             'host'      => $this->host,
             'database'  => $this->db,
             'username'  => $this->user,
-            'password'  => 'password',
+            'password'  => $this->pass,
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
         ]);
         $capsule->setAsGlobal();
+        $capsule->bootEloquent();
 	}
+
+	public function table($tableName)
+    {
+	    return Capsule::table($tableName);
+    }
 }

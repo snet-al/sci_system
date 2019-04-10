@@ -1,4 +1,5 @@
 {
+    "name": "snet-al/sci_system",
     "require": {
         "illuminate/database": "^5.7"
     }
