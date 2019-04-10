@@ -100,7 +100,7 @@ class SCI_Controller
             return $this->{$name};
         }
 
-        $rc = new \ReflectionClass(get_class($this));
+        $rc = new ReflectionClass(get_class($this));
         $constructorParameters = $rc->getConstructor()->getParameters();
         foreach ($constructorParameters as $constructorParameter) {
             $className = ($constructorParameter->getClass()->getName());
