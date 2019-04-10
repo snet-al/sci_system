@@ -32,9 +32,8 @@ class Database
             'prefix'    => '',
         ]);
         $capsule->setAsGlobal();
-	$capsule->bootEloquent();
-
-    }
+        $capsule->bootEloquent();
+	}
 
 	public function table($tableName)
     {

@@ -23,7 +23,7 @@ Class OAuth2
             if (!(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) {
                 header('location:oauth2.php?redirect_url='.$_SERVER['REQUEST_URI']);
             }
-            exit();
+            return false;
         }
 
         return true;
@@ -108,7 +108,7 @@ Class OAuth2
                 header("location:" . $_GET['redirect_url']);
             }
         } else {
-            require_once 'auth_resources/login.html';
+            require_once PATH.'/auth_resources/login.html';
         }
     }
     

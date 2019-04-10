@@ -1,14 +1,17 @@
 <?php
 require_once 'Manager.php';
+
 class SCI_Controller
 {
     public $owner = null;
     public $db = null;
+    public $request = null;
+    public $response = null;
 
     public function __construct()
     {
         foreach ($this as $k => $v) {
-            if($k !== 'response' && $k !== 'request' && $k !== 'db' && $k !== 'owner') {
+            if($k !== 'response') {
                 unset($this->{$k});
             }
         }
